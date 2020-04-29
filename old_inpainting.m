@@ -24,7 +24,7 @@ disp('Candidate names reading...');
 masks = read_flist([dataset_path, '/', masks_path, '/', masks_flist_name], dataset_size);
 disp('   success');
 
-for index=191:dataset_size
+for index=1:dataset_size
     
     candidate_full_path = [dataset_path, '/', output_path, '/', char(candidates(index))];
     mask_full_path = [dataset_path, '/', masks_path, '/', char(masks(index))];
@@ -72,7 +72,11 @@ for i=1:imageW
         
         for v=-aMaxHoleSize:aMaxHoleSize
             for h=-aMaxHoleSize:aMaxHoleSize
-                indexI = i + v;
+                
+                if (aMask(i,j) == 0)
+                    valFilt = exp(mult * (v * v + h * h));
+                    
+                    indexI = i + v;
                     if(indexI < 1)
                        indexI = 1; 
                     end
@@ -87,11 +91,6 @@ for i=1:imageW
                     if(indexJ > 256)
                        indexJ = 256;
                     end
-                
-                if (aMask(indexI,indexJ) == 1)
-                    valFilt = exp(mult * (v * v + h * h));
-                    
-                    
                     
                     sumFilt = sumFilt + valFilt;
                     sum = sum + valFilt * aImage(indexI, indexJ);
